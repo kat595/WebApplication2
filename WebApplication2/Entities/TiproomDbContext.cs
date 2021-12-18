@@ -4,7 +4,7 @@ namespace WebApplication2.Entities
 {
     public class TiproomDbContext : DbContext
     {
-        private string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=TiproomDb;Trusted_Connection=True;";
+        private string _connectionString = "Server=(LocalDb)\\MSSQLLocalDB;Database=TiproomDb;Trusted_Connection=True;";
 
         public DbSet<Club> Clubs { get; set; }
         public DbSet<Footballer> Footballers { get; set; }
@@ -19,6 +19,12 @@ namespace WebApplication2.Entities
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
+            
+
+            modelbuilder.Entity<League_founder>().HasKey(sc => new { sc.LeagueId, sc.FounderId });
+
+            modelbuilder.Entity<League_score>().HasKey(sd => new { sd.LeagueId, sd.UserId });
+
             modelbuilder.Entity<Club>()
                 .Property(r => r.Nameclub)
                 .IsRequired()
@@ -36,6 +42,31 @@ namespace WebApplication2.Entities
             modelbuilder.Entity<Match>()
                 .Property(y => y.Gameweek)
                 .IsRequired();
+
+            modelbuilder.Entity<Match>()
+                .HasOne(z => z.Home)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelbuilder.Entity<Match>()
+                .HasOne(z => z.Away)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelbuilder.Entity<Tip>()
+                .HasOne(a => a.Tip_goal_forward)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelbuilder.Entity<Tip>()
+                .HasOne(a => a.Tip_goal_midfielder)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelbuilder.Entity<Tip>()
+                .HasOne(a => a.Tip_goal_defender)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelbuilder.Entity<User>()
                 .Property(c => c.Nick)

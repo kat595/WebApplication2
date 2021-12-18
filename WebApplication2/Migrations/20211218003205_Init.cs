@@ -94,27 +94,25 @@ namespace WebApplication2.Migrations
                         column: x => x.AwayId,
                         principalTable: "Clubs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Matchs_Clubs_HomeId",
                         column: x => x.HomeId,
                         principalTable: "Clubs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "League_founders",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     LeagueId = table.Column<int>(type: "int", nullable: false),
                     FounderId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_League_founders", x => x.Id);
+                    table.PrimaryKey("PK_League_founders", x => new { x.LeagueId, x.FounderId });
                     table.ForeignKey(
                         name: "FK_League_founders_Leagues_LeagueId",
                         column: x => x.LeagueId,
@@ -133,15 +131,13 @@ namespace WebApplication2.Migrations
                 name: "League_scores",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     LeagueId = table.Column<int>(type: "int", nullable: false),
                     Score = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_League_scores", x => x.Id);
+                    table.PrimaryKey("PK_League_scores", x => new { x.LeagueId, x.UserId });
                     table.ForeignKey(
                         name: "FK_League_scores_Leagues_LeagueId",
                         column: x => x.LeagueId,
@@ -264,19 +260,19 @@ namespace WebApplication2.Migrations
                         column: x => x.Tip_goal_defenderId,
                         principalTable: "Footballer_stats",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Tips_Footballer_stats_Tip_goal_forwardId",
                         column: x => x.Tip_goal_forwardId,
                         principalTable: "Footballer_stats",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Tips_Footballer_stats_Tip_goal_midfielderId",
                         column: x => x.Tip_goal_midfielderId,
                         principalTable: "Footballer_stats",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Tips_Leagues_LeagueId",
                         column: x => x.LeagueId,
@@ -316,16 +312,6 @@ namespace WebApplication2.Migrations
                 name: "IX_League_founders_FounderId",
                 table: "League_founders",
                 column: "FounderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_League_founders_LeagueId",
-                table: "League_founders",
-                column: "LeagueId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_League_scores_LeagueId",
-                table: "League_scores",
-                column: "LeagueId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_League_scores_UserId",

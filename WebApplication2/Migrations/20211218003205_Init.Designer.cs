@@ -12,7 +12,7 @@ using WebApplication2.Entities;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(TiproomDbContext))]
-    [Migration("20211216172606_Init")]
+    [Migration("20211218003205_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,47 +139,31 @@ namespace WebApplication2.Migrations
 
             modelBuilder.Entity("WebApplication2.Entities.League_founder", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("LeagueId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("FounderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LeagueId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("LeagueId", "FounderId");
 
                     b.HasIndex("FounderId");
-
-                    b.HasIndex("LeagueId");
 
                     b.ToTable("League_founders");
                 });
 
             modelBuilder.Entity("WebApplication2.Entities.League_score", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("LeagueId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("LeagueId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<double>("Score")
                         .HasColumnType("float");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LeagueId");
+                    b.HasKey("LeagueId", "UserId");
 
                     b.HasIndex("UserId");
 
@@ -403,13 +387,13 @@ namespace WebApplication2.Migrations
             modelBuilder.Entity("WebApplication2.Entities.League_founder", b =>
                 {
                     b.HasOne("WebApplication2.Entities.User", "Founder")
-                        .WithMany()
+                        .WithMany("LeagueFounders")
                         .HasForeignKey("FounderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WebApplication2.Entities.League", "League")
-                        .WithMany()
+                        .WithMany("LeagueFounders")
                         .HasForeignKey("LeagueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -422,13 +406,13 @@ namespace WebApplication2.Migrations
             modelBuilder.Entity("WebApplication2.Entities.League_score", b =>
                 {
                     b.HasOne("WebApplication2.Entities.League", "League")
-                        .WithMany()
+                        .WithMany("LeagueScores")
                         .HasForeignKey("LeagueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WebApplication2.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("LeagueScores")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -443,13 +427,13 @@ namespace WebApplication2.Migrations
                     b.HasOne("WebApplication2.Entities.Club", "Away")
                         .WithMany()
                         .HasForeignKey("AwayId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("WebApplication2.Entities.Club", "Home")
                         .WithMany()
                         .HasForeignKey("HomeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Away");
@@ -485,19 +469,19 @@ namespace WebApplication2.Migrations
                     b.HasOne("WebApplication2.Entities.Footballer_stat", "Tip_goal_defender")
                         .WithMany()
                         .HasForeignKey("Tip_goal_defenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("WebApplication2.Entities.Footballer_stat", "Tip_goal_forward")
                         .WithMany()
                         .HasForeignKey("Tip_goal_forwardId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("WebApplication2.Entities.Footballer_stat", "Tip_goal_midfielder")
                         .WithMany()
                         .HasForeignKey("Tip_goal_midfielderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("WebApplication2.Entities.User", "User")
@@ -524,8 +508,19 @@ namespace WebApplication2.Migrations
                     b.Navigation("Footballers");
                 });
 
+            modelBuilder.Entity("WebApplication2.Entities.League", b =>
+                {
+                    b.Navigation("LeagueFounders");
+
+                    b.Navigation("LeagueScores");
+                });
+
             modelBuilder.Entity("WebApplication2.Entities.User", b =>
                 {
+                    b.Navigation("LeagueFounders");
+
+                    b.Navigation("LeagueScores");
+
                     b.Navigation("Tips");
                 });
 #pragma warning restore 612, 618

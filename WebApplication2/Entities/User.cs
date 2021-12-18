@@ -9,5 +9,9 @@
         public int Ifadmin { get; set; }
         public List<Tip> Tips { get; set; }
         public List<League> Leagues { get; set; } 
+
+        public IList<League_founder> LeagueFounders { get; set;}
+
+        public IList<League_score> LeagueScores { get; set; }
     }
 }
