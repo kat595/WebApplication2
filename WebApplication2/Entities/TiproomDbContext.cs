@@ -71,8 +71,13 @@ namespace WebApplication2.Entities
             modelbuilder.Entity<User>()
                 .Property(c => c.Nick)
                 .IsRequired()
-                .HasMaxLength(20);
-        
+                .HasMaxLength(25);
+
+            modelbuilder.Entity<User>()
+                .Property(v => v.Password)
+                .IsRequired()
+                .HasMaxLength(25);
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
