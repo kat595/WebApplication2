@@ -1,8 +1,9 @@
-﻿namespace WebApplication2.Entities
+﻿using WebApplication2.Entities;
+
+namespace WebApplication2.Models
 {
-    public class Footballer
+    public class CreateFootballerDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Lastname { get; set; }
         public string Position { get; set; }

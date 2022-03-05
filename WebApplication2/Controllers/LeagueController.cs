@@ -24,11 +24,23 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<League> Get([FromRoute] int id)
+        public ActionResult<League> GetById([FromRoute]int id)
         {
             var league = _dbContext
                 .Leagues
                 .FirstOrDefault(u => u.Id == id);
+
+            if (league is null) return NotFound();
+
+            return Ok(league);
+        }
+
+        [HttpGet("{name}")]
+        public ActionResult<League> GetByLeagueName([FromRoute]string name)
+        {
+            var league = _dbContext
+                .Leagues
+                .FirstOrDefault(u => u.League_name == name);
 
             if (league is null) return NotFound();
 
