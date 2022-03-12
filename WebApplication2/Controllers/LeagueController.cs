@@ -1,51 +1,70 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Entities;
+using WebApplication2.Models;
+using WebApplication2.Models.GetDtos;
+using WebApplication2.Models.ModifyDtos;
+using WebApplication2.Services.LeagueServices;
+using AutoMapper;
 
 namespace WebApplication2.Controllers
 {
     [Route("api/league")]
     public class LeagueController : ControllerBase
     {
-        private readonly TiproomDbContext _dbContext;
+        private readonly ILeagueService _leagueService;
 
-        public LeagueController(TiproomDbContext dbContext)
+        public LeagueController(ILeagueService leagueService)
         {
-            _dbContext = dbContext;
+            _leagueService = leagueService;
+        }
+
+        [HttpPut("add-user-to-league")]
+        public ActionResult AddNewUserToLeague([FromBody]AddUserToLeagueDto dto)
+        {
+            var isUpdated = _leagueService.AddNewUsertoLeague(dto.userId, dto.leagueId);
+
+            if(isUpdated == false) return NotFound();
+
+            return Ok();
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<League>> GetAll()
+        public ActionResult<IEnumerable<GetLeagueDto>> GetAll()
         {
-            var leagues = _dbContext
-                .Leagues
-                .ToList();
+            var leagues = _leagueService.GetAll();
 
             return Ok(leagues);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<League> GetById([FromRoute]int id)
+        public ActionResult<GetLeagueDto> GetById([FromRoute]int id)
         {
-            var league = _dbContext
-                .Leagues
-                .FirstOrDefault(u => u.Id == id);
+            var league = _leagueService.GetById(id);
 
             if (league is null) return NotFound();
 
             return Ok(league);
         }
 
-        [HttpGet("{name}")]
-        public ActionResult<League> GetByLeagueName([FromRoute]string name)
+        [HttpGet("name")]
+        public ActionResult<GetLeagueDto> GetByLeagueName([FromBody] GetLeagueByLeagueNameDto dto)
         {
-            var league = _dbContext
-                .Leagues
-                .FirstOrDefault(u => u.League_name == name);
+            var league = _leagueService.GetByLeagueName(dto.name);
 
             if (league is null) return NotFound();
 
             return Ok(league);
 
+        }
+
+        [HttpPost]
+        public ActionResult CreateLeague([FromBody] CreateLeagueDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var result = _leagueService.CreateLeague(dto);
+
+            return Created($"/api/league/{result}", null);
         }
 
     }

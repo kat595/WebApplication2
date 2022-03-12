@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Entities;
 using WebApplication2.Models;
+using WebApplication2.Services.ClubServices;
 using AutoMapper;
 
 namespace WebApplication2.Controllers
@@ -8,21 +9,17 @@ namespace WebApplication2.Controllers
     [Route("api/club")]
     public class ClubController : ControllerBase
     {
-        private readonly TiproomDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IClubService _clubService;
 
-        public ClubController(TiproomDbContext dbContext, IMapper mapper)
+        public ClubController(IClubService clubService)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _clubService = clubService;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<League>> GetAll()
+        public ActionResult<IEnumerable<GetClubDto>> GetAll()
         {
-            var result = _dbContext
-                .Clubs
-                .ToList();
+            var result = _clubService.GetAll();
 
             return Ok(result);
         }
@@ -30,21 +27,17 @@ namespace WebApplication2.Controllers
         [HttpGet("{id}")]
         public ActionResult GetById([FromRoute]int id)
         {
-            var result = _dbContext
-                .Clubs
-                .FirstOrDefault(u => u.Id == id);
+            var result = _clubService.GetById(id);
 
             if (result is null) return NotFound();
 
             return Ok(result);
         }
 
-        [HttpGet("{name}")]
-        public ActionResult GetByClubName([FromRoute]string name)
+        [HttpGet("name")]
+        public ActionResult GetByClubName(string name)
         {
-            var result = _dbContext
-                .Clubs
-                .FirstOrDefault(u => u.Nameclub == name);
+            var result = _clubService.GetByClubName(name);
 
             if (result is null) return NotFound();
 
@@ -55,12 +48,9 @@ namespace WebApplication2.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var club = _mapper.Map<Club>(dto);
+            var result = _clubService.CreateClub(dto);
 
-            _dbContext.Clubs.Add(club);
-            _dbContext.SaveChanges();
-
-            return Created($"/api/club/{club.Id}", null);
+            return Created($"/api/club/{result}", null);
         }
     }
 }

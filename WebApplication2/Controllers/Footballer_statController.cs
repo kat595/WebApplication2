@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Entities;
 using WebApplication2.Models;
+using WebApplication2.Services.Footballer_statServices;
 using AutoMapper;
 
 namespace WebApplication2.Controllers
@@ -8,31 +9,25 @@ namespace WebApplication2.Controllers
     [Route("api/footballer_stat")]
     public class Footballer_statController : ControllerBase
     {
-        private readonly TiproomDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IFootballer_statService _footballer_StatService;
 
-        public Footballer_statController(TiproomDbContext dbContext, IMapper mapper)
+        public Footballer_statController(IFootballer_statService footballer_StatService)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _footballer_StatService = footballer_StatService;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Footballer_stat>> GetAll()
         {
-            var result = _dbContext
-                .Footballer_stats
-                .ToList();
+            var result = _footballer_StatService.GetAll();
 
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public ActionResult GetById([FromRoute]int id)
+        public ActionResult<Footballer_stat> GetById([FromRoute]int id)
         {
-            var result = _dbContext
-                .Footballer_stats
-                .FirstOrDefault(u => u.Id == id);
+            var result = _footballer_StatService.GetById(id);
 
             if (result is null) return NotFound();
 
@@ -40,28 +35,18 @@ namespace WebApplication2.Controllers
         }
         
 
-        [HttpGet("{footballer_id}")]
+        [HttpGet("footballer_id")]
         public ActionResult<IEnumerable<Footballer_stat>> GetByFootballerId([FromRoute]int footballer_id)
         {
-            var result = _dbContext
-                .Footballer_stats
-                .Where(u => u.FootballerId == footballer_id)
-                .ToList();
-
-            if (result is null) return NotFound();
+            var result = _footballer_StatService.GetByFootballerId(footballer_id);
 
             return Ok(result);
         }
 
-        [HttpGet("{match_id}")]
+        [HttpGet("match_id")]
         public ActionResult<IEnumerable<Footballer_stat>> GetByMatchId([FromRoute]int match_id)
         {
-            var result = _dbContext
-                .Footballer_stats
-                .Where(u => u.MatchId == match_id)
-                .ToList();
-
-            if (result is null) return NotFound();
+            var result = _footballer_StatService.GetByMatchId(match_id);
 
             return Ok(result);
         }
@@ -71,12 +56,9 @@ namespace WebApplication2.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var footballer_stat = _mapper.Map<Footballer_stat>(dto);
+            var result = _footballer_StatService.CreateFootballer_stat(dto);
 
-            _dbContext.Footballer_stats.Add(footballer_stat);
-            _dbContext.SaveChanges();
-
-            return Created($"/api/footballer_stat/{footballer_stat.Id}", null);
+            return Created($"/api/footballer_stat/{result}", null);
         }
     }
 }

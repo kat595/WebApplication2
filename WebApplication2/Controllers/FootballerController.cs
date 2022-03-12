@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Entities;
 using WebApplication2.Models;
+using WebApplication2.Models.GetDtos;
+using WebApplication2.Services.FootballerServices;
 using AutoMapper;
 
 namespace WebApplication2.Controllers
@@ -8,31 +10,25 @@ namespace WebApplication2.Controllers
     [Route("api/footballer")]
     public class FootballerController : ControllerBase
     {
-        private readonly TiproomDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IFootballerService _footballerService;
 
-        public FootballerController(TiproomDbContext dbContext, IMapper mapper)
+        public FootballerController(IFootballerService footballerService)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _footballerService = footballerService;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Footballer>> GetAll()
+        public ActionResult<IEnumerable<GetFootballerWithClubDto>> GetAll()
         {
-            var result = _dbContext
-                .Footballers
-                .ToList();
+            var result = _footballerService.GetAll();
 
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public ActionResult GetById([FromRoute] int id)
+        public ActionResult<GetFootballerWithClubDto> GetById([FromRoute] int id)
         {
-            var result = _dbContext
-                .Footballers
-                .FirstOrDefault(u => u.Id == id);
+            var result = _footballerService.GetById(id);
 
             if (result is null) return NotFound();
 
@@ -44,12 +40,9 @@ namespace WebApplication2.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var footballer = _mapper.Map<Footballer>(dto);
+            var result = _footballerService.CreateFootballer(dto);
 
-            _dbContext.Footballers.Add(footballer);
-            _dbContext.SaveChanges();
-
-            return Created($"/api/footballer/{footballer.Id}", null);
+            return Created($"/api/footballer/{result}", null);
         }
     }
 }

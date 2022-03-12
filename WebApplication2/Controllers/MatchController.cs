@@ -1,34 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Entities;
+using WebApplication2.Models;
+using WebApplication2.Models.ModifyDtos;
+using WebApplication2.Services.MatchServices;
+using AutoMapper;
 
 namespace WebApplication2.Controllers
 {
     [Route("api/match")]
     public class MatchController : ControllerBase
     {
-        private readonly TiproomDbContext _dbContext;
+        private readonly IMatchService _matchService;
 
-        public MatchController(TiproomDbContext dbContext)
+        public MatchController(IMatchService matchService)
         {
-            _dbContext = dbContext;
+            _matchService = matchService;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Match>> GetAll()
         {
-            var result = _dbContext
-                .Matchs
-                .ToList();
+            var result = _matchService.GetAll();
 
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<User> Get([FromRoute] int id)
+        public ActionResult<Match> Get([FromRoute] int id)
         {
-            var result = _dbContext
-                .Matchs
-                .FirstOrDefault(u => u.Id == id);
+            var result = _matchService.Get(id);
 
             if (result is null) return NotFound();
 
@@ -36,18 +36,33 @@ namespace WebApplication2.Controllers
 
         }
 
-        [HttpGet("{gameweek}")]
-        public ActionResult<User> GetMatchesByGameweek([FromRoute] int gameweek)
+        [HttpGet("gameweek")]
+        public ActionResult<IEnumerable<User>> GetMatchesByGameweek(int gameweek)
         {
-            var result = _dbContext
-                .Matchs
-                .Where(u => u.Gameweek == gameweek)
-                .ToList();
-
-            if (result is null) return NotFound();
+            var result = _matchService.GetMatchesByGameweek(gameweek);
 
             return Ok(result);
 
+        }
+
+        [HttpPost]
+        public ActionResult CreateMatch([FromBody] CreateMatchDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var result = _matchService.CreateMatch(dto);
+
+            return Created($"/api/match/{result}", null);
+        }
+
+        [HttpPut("change-match-result")]
+        public ActionResult AddNewUserToLeague([FromBody] ChangeResultInMatchDto dto)
+        {
+            var isUpdated = _matchService.ChangeResultOfMatch(dto.MatchId, dto.Result, dto.Goal_home, dto.Goal_away);
+
+            if (isUpdated == false) return NotFound();
+
+            return Ok();
         }
     }
 }

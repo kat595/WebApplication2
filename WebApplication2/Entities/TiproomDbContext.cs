@@ -53,21 +53,6 @@ namespace WebApplication2.Entities
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelbuilder.Entity<Tip>()
-                .HasOne(a => a.Tip_goal_forward)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelbuilder.Entity<Tip>()
-                .HasOne(a => a.Tip_goal_midfielder)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelbuilder.Entity<Tip>()
-                .HasOne(a => a.Tip_goal_defender)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
-
             modelbuilder.Entity<User>()
                 .Property(c => c.Nick)
                 .IsRequired()

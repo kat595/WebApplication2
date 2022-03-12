@@ -13,14 +13,8 @@
         public int Goal_count { get; set; }
         public int Tip_goal_home { get; set; }
         public int Tip_goal_away { get; set; }
-        public int ForwardId { get; set; }
-        public virtual Footballer_stat Tip_goal_forward { get; set; }
-        public int MidfielderId { get; set; }
-        public virtual Footballer_stat Tip_goal_midfielder { get; set; }
-        public int DefenderId { get; set; }
-        public virtual Footballer_stat Tip_goal_defender { get; set; }
-
-
+        public int FootballerId { get; set; }
+        public virtual Footballer Footballer { get; set; }
 
     }
 }

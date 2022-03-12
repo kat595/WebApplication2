@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Entities;
 using WebApplication2.Models;
+using WebApplication2.Models.GetDtos;
+using WebApplication2.Services.UserServices;
 using AutoMapper;
 
 namespace WebApplication2.Controllers
@@ -8,51 +10,59 @@ namespace WebApplication2.Controllers
     [Route("api/user")]
     public class UserController : ControllerBase
     {
-        private readonly TiproomDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public UserController(TiproomDbContext dbContext, IMapper mapper)
+        public UserController(IUserService userService)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _userService = userService;
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] int id)
+        {
+            var isDeleted = _userService.Delete(id);
+
+            if (isDeleted == true) return NoContent();
+
+            return NotFound();
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<UserDto>> GetAll()
+        public ActionResult<IEnumerable<GetUserDto>> GetAll()
         {
-            var users = _dbContext
-                .Users
-                .ToList();
+            var result = _userService.GetAll();
 
-            var userDto = _mapper.Map<List<UserDto>>(users);
-
-            return Ok(userDto);
+            return Ok(result);
         }
         
         [HttpGet("{id}")]
-        public ActionResult<UserDto> Get([FromRoute]int id)
+        public ActionResult<GetUserDto> Get([FromRoute]int id)
         {
-            var user = _dbContext
-                .Users
-                .FirstOrDefault(u => u.Id == id);
+            var result = _userService.GetById(id);
 
-            if (user is null) return NotFound();
+            if(result == null) return NotFound();
 
-            var userDto = _mapper.Map<UserDto>(user);
-
-            return Ok(userDto);
+            return Ok(result);
         }
+
+        [HttpGet("check-user")]
+        public ActionResult<int> GetUserId([FromBody] GetUserIdByNickAndPassword dto)
+        {
+            var result = _userService.GetUserIdByPasswordAndNickname(dto.nick, dto.password);
+
+            if (result == null) return NotFound();
+
+            return Ok(result);
+        }
+
         [HttpPost]
         public ActionResult CreateUser([FromBody] CreateUserDto dto)
         {
             if(!ModelState.IsValid) return BadRequest(ModelState);
             
-            var user = _mapper.Map<User>(dto);
+            var result = _userService.CreateUser(dto);
 
-            _dbContext.Users.Add(user);
-            _dbContext.SaveChanges();
-
-            return Created($"/api/user/{user.Id}", null);
+            return Created($"/api/user/{result}", null);
         }
 
     }

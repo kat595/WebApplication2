@@ -1,26 +1,37 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Entities;
+using WebApplication2.Models;
+using WebApplication2.Services.TipServices;
+using AutoMapper;
 
 namespace WebApplication2.Controllers
 {
     [Route("api/tip")]
     public class TipController : ControllerBase
     {
-        private readonly TiproomDbContext _dbContext;
+        private readonly ITipService _tipService;
 
-        public TipController(TiproomDbContext dbContext)
+        public TipController(ITipService tipService)
         {
-            _dbContext = dbContext;
+            _tipService = tipService;
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] int id)
+        {
+            var isDeleted = _tipService.Delete(id);
+
+            if (isDeleted == true) return NoContent();
+
+            return NotFound();
         }
 
         [HttpGet("{id}")]
         public ActionResult GetTipById([FromRoute]int id)
         {
-            var result = _dbContext
-                .Tips
-                .FirstOrDefault(t => t.Id == id);
+            var result = _tipService.GetTipById(id);
 
-            if (result == null) return NotFound();
+            if(result == null) return NotFound();
 
             return Ok(result);
         }
@@ -28,16 +39,19 @@ namespace WebApplication2.Controllers
         [HttpGet("user_league_matchTip")]
         public ActionResult GetUserTipByLeagueAndMatch(int user_id, int match_id, int league_id)
         {
-            var result = _dbContext
-                .Tips
-                .Where(u => u.LeagueId == league_id)
-                .Where(v => v.UserId == user_id)
-                .Where(r => r.MatchId == match_id)
-                .FirstOrDefault();
-
-            if (result == null) return NotFound();
+            var result = _tipService.GetUserTipByLeagueAndMatch(user_id, match_id, league_id);
 
             return Ok(result);
+        }
+
+        [HttpPost]
+        public ActionResult CreateTip([FromBody] CreateTipDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var result = _tipService.CreateTip(dto);
+
+            return Created($"/api/tip/{result}", null);
         }
     }
 }

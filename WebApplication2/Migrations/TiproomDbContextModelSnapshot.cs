@@ -256,10 +256,7 @@ namespace WebApplication2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("DefenderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ForwardId")
+                    b.Property<int>("FootballerId")
                         .HasColumnType("int");
 
                     b.Property<int>("Goal_count")
@@ -271,22 +268,10 @@ namespace WebApplication2.Migrations
                     b.Property<int>("MatchId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MidfielderId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Tip_goal_away")
                         .HasColumnType("int");
 
-                    b.Property<int>("Tip_goal_defenderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Tip_goal_forwardId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Tip_goal_home")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Tip_goal_midfielderId")
                         .HasColumnType("int");
 
                     b.Property<int>("Tip_score")
@@ -297,15 +282,11 @@ namespace WebApplication2.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FootballerId");
+
                     b.HasIndex("LeagueId");
 
                     b.HasIndex("MatchId");
-
-                    b.HasIndex("Tip_goal_defenderId");
-
-                    b.HasIndex("Tip_goal_forwardId");
-
-                    b.HasIndex("Tip_goal_midfielderId");
 
                     b.HasIndex("UserId");
 
@@ -461,6 +442,12 @@ namespace WebApplication2.Migrations
 
             modelBuilder.Entity("WebApplication2.Entities.Tip", b =>
                 {
+                    b.HasOne("WebApplication2.Entities.Footballer", "Footballer")
+                        .WithMany()
+                        .HasForeignKey("FootballerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WebApplication2.Entities.League", "League")
                         .WithMany()
                         .HasForeignKey("LeagueId")
@@ -473,39 +460,17 @@ namespace WebApplication2.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebApplication2.Entities.Footballer_stat", "Tip_goal_defender")
-                        .WithMany()
-                        .HasForeignKey("Tip_goal_defenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("WebApplication2.Entities.Footballer_stat", "Tip_goal_forward")
-                        .WithMany()
-                        .HasForeignKey("Tip_goal_forwardId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("WebApplication2.Entities.Footballer_stat", "Tip_goal_midfielder")
-                        .WithMany()
-                        .HasForeignKey("Tip_goal_midfielderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("WebApplication2.Entities.User", "User")
                         .WithMany("Tips")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Footballer");
+
                     b.Navigation("League");
 
                     b.Navigation("Match");
-
-                    b.Navigation("Tip_goal_defender");
-
-                    b.Navigation("Tip_goal_forward");
-
-                    b.Navigation("Tip_goal_midfielder");
 
                     b.Navigation("User");
                 });

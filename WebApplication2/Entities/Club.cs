@@ -4,6 +4,6 @@
     {
         public int Id { get; set; } 
         public string Nameclub { get; set; }
-        public List<Footballer> Footballers { get; set; }
+        public virtual List<Footballer> Footballers { get; set; }
     }
 }
