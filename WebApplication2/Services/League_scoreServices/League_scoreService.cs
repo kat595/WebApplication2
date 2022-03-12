@@ -116,6 +116,7 @@ namespace WebApplication2.Services.League_scoreServices
 
                 }
             }
+            _dbContext.SaveChanges();
             return true;
         }
 
