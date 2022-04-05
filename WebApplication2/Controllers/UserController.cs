@@ -8,6 +8,7 @@ using AutoMapper;
 namespace WebApplication2.Controllers
 {
     [Route("api/user")]
+    [ApiController]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -50,7 +51,7 @@ namespace WebApplication2.Controllers
         {
             var result = _userService.GetUserIdByPasswordAndNickname(dto.nick, dto.password);
 
-            if (result == null) return NotFound();
+            if (result == null) return BadRequest("Podane dane są nieprawidlowe");
 
             return Ok(result);
         }
@@ -58,9 +59,9 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult CreateUser([FromBody] CreateUserDto dto)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
             
             var result = _userService.CreateUser(dto);
+            if (result == -1) return BadRequest("Uzytkownik o takim nicku już istnieje!");
 
             return Created($"/api/user/{result}", null);
         }

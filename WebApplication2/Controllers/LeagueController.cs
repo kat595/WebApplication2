@@ -9,6 +9,7 @@ using AutoMapper;
 namespace WebApplication2.Controllers
 {
     [Route("api/league")]
+    [ApiController]
     public class LeagueController : ControllerBase
     {
         private readonly ILeagueService _leagueService;
@@ -32,6 +33,14 @@ namespace WebApplication2.Controllers
         public ActionResult<IEnumerable<GetLeagueDto>> GetAll()
         {
             var leagues = _leagueService.GetAll();
+
+            return Ok(leagues);
+        }
+
+        [HttpGet("user-leagues")]
+        public ActionResult<IEnumerable<GetLeagueDto>> GetUserLeagues([FromBody] GetUserLeaguesDto dto)
+        {
+            var leagues = _leagueService.GetUserLeagues(dto.UserId);
 
             return Ok(leagues);
         }

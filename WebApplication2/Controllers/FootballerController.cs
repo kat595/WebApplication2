@@ -8,6 +8,7 @@ using AutoMapper;
 namespace WebApplication2.Controllers
 {
     [Route("api/footballer")]
+    [ApiController]
     public class FootballerController : ControllerBase
     {
         private readonly IFootballerService _footballerService;

@@ -12,8 +12,7 @@ namespace WebApplication2.Models
         public string Nick { get; set; }
         
         [Required]
-        [MaxLength(25)]
         public string Password { get; set; }
-        public int Ifadmin { get; set; }
+        public int Ifadmin { get; set; } = 0;
     }
 }

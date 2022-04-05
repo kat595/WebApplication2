@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication2.Entities;
 
@@ -11,9 +12,10 @@ using WebApplication2.Entities;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(TiproomDbContext))]
-    partial class TiproomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220319125039_AddNullableToMatchTable")]
+    partial class AddNullableToMatchTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,7 +321,8 @@ namespace WebApplication2.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.HasKey("Id");
 

@@ -7,7 +7,7 @@ namespace WebApplication2.Services.ClubServices
     {
         int CreateClub(CreateClubDto dto);
         IEnumerable<GetClubDto> GetAll();
-        Club? GetByClubName(string name);
-        Club? GetById(int id);
+        GetClubDto? GetByClubName(string name);
+        GetClubDto? GetById(int id);
     }
 }

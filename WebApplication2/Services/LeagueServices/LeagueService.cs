@@ -55,6 +55,31 @@ namespace WebApplication2.Services.LeagueServices
             return leaguesDto;
         }
 
+        public IEnumerable<GetLeagueDto> GetUserLeagues(int userId)
+        {
+            var userLeagues = _dbContext
+                .League_scores
+                .Where(x => x.UserId == userId)
+                .ToList();
+
+            var leagues = new List<GetLeagueDto>();
+
+            foreach(var x in userLeagues)
+            {
+                var league = _dbContext
+                    .Leagues
+                    .FirstOrDefault(l => l.Id == x.LeagueId);
+
+                var leagueDto = _mapper.Map<GetLeagueDto>(league);
+
+                leagues.Add(leagueDto);
+            }
+            
+            if (leagues.Count == 0) return Enumerable.Empty<GetLeagueDto>();
+
+            return leagues;
+        }
+
 
         public GetLeagueDto? GetById(int id)
         {

@@ -60,8 +60,7 @@ namespace WebApplication2.Entities
 
             modelbuilder.Entity<User>()
                 .Property(v => v.Password)
-                .IsRequired()
-                .HasMaxLength(25);
+                .IsRequired();
 
         }
 

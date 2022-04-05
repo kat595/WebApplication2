@@ -7,6 +7,7 @@ using AutoMapper;
 namespace WebApplication2.Controllers
 {
     [Route("api/tip")]
+    [ApiController]
     public class TipController : ControllerBase
     {
         private readonly ITipService _tipService;

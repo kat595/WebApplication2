@@ -10,5 +10,6 @@ namespace WebApplication2.Services.LeagueServices
         GetLeagueDto? GetById(int id);
         GetLeagueDto? GetByLeagueName(string name);
         bool AddNewUsertoLeague(int userId, int leagueId);
+        IEnumerable<GetLeagueDto> GetUserLeagues(int userId);
     }
 }

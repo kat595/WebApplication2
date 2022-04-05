@@ -7,6 +7,7 @@ using AutoMapper;
 namespace WebApplication2.Controllers
 {
     [Route("api/club")]
+    [ApiController]
     public class ClubController : ControllerBase
     {
         private readonly IClubService _clubService;

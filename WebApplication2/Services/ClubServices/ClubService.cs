@@ -28,28 +28,32 @@ namespace WebApplication2.Services.ClubServices
             return resultDtos;
         }
 
-        public Club? GetById(int id)
+        public GetClubDto? GetById(int id)
         {
             var result = _dbContext
                 .Clubs
+                .Include(f => f.Footballers)
                 .FirstOrDefault(u => u.Id == id);
 
             if (result is null) return null;
 
-            var resultDtos = _mapper.Map<GetClubDto>(result);
+            var resultDto = _mapper.Map<GetClubDto>(result);
 
-            return result;
+            return resultDto;
         }
 
-        public Club? GetByClubName(string name)
+        public GetClubDto? GetByClubName(string name)
         {
             var result = _dbContext
                 .Clubs
+                .Include(f => f.Footballers)
                 .FirstOrDefault(u => u.Nameclub == name);
 
             if (result is null) return null;
 
-            return result;
+            var resultDto = _mapper.Map<GetClubDto>(result);
+
+            return resultDto;
         }
 
         public int CreateClub(CreateClubDto dto)

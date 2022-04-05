@@ -6,6 +6,7 @@ using WebApplication2.Services.League_founderServices;
 namespace WebApplication2.Controllers
 {
     [Route("api/league_founder")]
+    [ApiController]
     public class League_founderController : ControllerBase 
     {
         private readonly ILeague_founderService _league_founderService;

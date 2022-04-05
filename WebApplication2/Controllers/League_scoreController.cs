@@ -8,6 +8,7 @@ using AutoMapper;
 namespace WebApplication2.Controllers
 {
     [Route("api/league_score")]
+    [ApiController]
     public class League_scoreController : ControllerBase
     {
         private readonly ILeague_scoreService _league_scoreService;

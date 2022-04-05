@@ -7,6 +7,7 @@ using AutoMapper;
 namespace WebApplication2.Controllers
 {
     [Route("api/odd")]
+    [ApiController]
     public class OddController : ControllerBase
     {
         private readonly IOddService _oddService;

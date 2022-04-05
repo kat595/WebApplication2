@@ -8,6 +8,7 @@ using AutoMapper;
 namespace WebApplication2.Controllers
 {
     [Route("api/match")]
+    [ApiController]
     public class MatchController : ControllerBase
     {
         private readonly IMatchService _matchService;
