@@ -86,12 +86,22 @@ namespace WebApplication2.Services.UserServices
             var user = _dbContext
                 .Users
                 .Where(n => n.Nick == nick)
-                .Where(p => p.Password == password)
                 .FirstOrDefault();
 
             if (user is null) return null;
 
-            return user.Id;
+            var passwordCheck = _passwordHasher.VerifyHashedPassword(user, user.Password, password);
+            
+            if(passwordCheck == PasswordVerificationResult.Success)
+            {
+                return user.Id;
+            }
+            else
+            {
+                return null;
+            }
+
+            
         }
     }
 }
