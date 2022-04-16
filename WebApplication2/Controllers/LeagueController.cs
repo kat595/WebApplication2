@@ -38,9 +38,9 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet("user-leagues")]
-        public ActionResult<IEnumerable<GetLeagueDto>> GetUserLeagues([FromBody] GetUserLeaguesDto dto)
+        public ActionResult<IEnumerable<GetLeagueDto>> GetUserLeagues([FromQuery] int id)
         {
-            var leagues = _leagueService.GetUserLeagues(dto.UserId);
+            var leagues = _leagueService.GetUserLeagues(id);
 
             return Ok(leagues);
         }
@@ -56,9 +56,9 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet("name")]
-        public ActionResult<GetLeagueDto> GetByLeagueName([FromBody] GetLeagueByLeagueNameDto dto)
+        public ActionResult<GetLeagueDto> GetByLeagueName([FromQuery] string name)
         {
-            var league = _leagueService.GetByLeagueName(dto.name);
+            var league = _leagueService.GetByLeagueName(name);
 
             if (league is null) return NotFound();
 
