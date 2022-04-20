@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Entities;
+using WebApplication2.Models.GetDtos;
 using WebApplication2.Models;
 using WebApplication2.Services.TipServices;
 using AutoMapper;
@@ -38,9 +39,9 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet("user_league_matchTip")]
-        public ActionResult GetUserTipByLeagueAndMatch(int user_id, int match_id, int league_id)
+        public ActionResult GetUserTipByLeagueAndMatch([FromQuery] GetTipByUserIdLeagueIdMatchId dto)
         {
-            var result = _tipService.GetUserTipByLeagueAndMatch(user_id, match_id, league_id);
+            var result = _tipService.GetUserTipByLeagueAndMatch(dto.userId, dto.matchId, dto.leagueId);
 
             return Ok(result);
         }
