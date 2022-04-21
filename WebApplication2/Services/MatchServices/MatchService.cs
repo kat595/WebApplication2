@@ -22,6 +22,8 @@ namespace WebApplication2.Services.MatchServices
                 .Matchs
                 .ToList();
 
+            if (result.Count == 0) return Enumerable.Empty<Match>();
+
             return result;
         }
 
