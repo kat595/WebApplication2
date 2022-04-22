@@ -33,6 +33,7 @@ namespace WebApplication2.Services.FootballerServices
         {
             var result = _dbContext
                 .Footballers
+                .Include(c => c.Club)
                 .FirstOrDefault(u => u.Id == id);
 
             if (result is null) return null;
