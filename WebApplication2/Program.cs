@@ -49,7 +49,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("FrontEndClient", builder =>
         builder.AllowAnyMethod()
         .AllowAnyHeader()
-        .WithOrigins("http://localhost:8080")
+        .WithOrigins("http://localhost:4200")
     
     );
 });
