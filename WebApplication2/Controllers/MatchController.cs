@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Entities;
 using WebApplication2.Models;
+using WebApplication2.Models.GetDtos;
 using WebApplication2.Models.ModifyDtos;
 using WebApplication2.Services.MatchServices;
 using AutoMapper;

@@ -1,5 +1,6 @@
 ﻿using WebApplication2.Entities;
 using WebApplication2.Models;
+using WebApplication2.Models.GetDtos;
 
 namespace WebApplication2.Services.MatchServices
 {

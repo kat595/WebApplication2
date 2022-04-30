@@ -47,7 +47,7 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet("check-user")]
-        public ActionResult<int> GetUserId([FromBody] GetUserIdByNickAndPassword dto)
+        public ActionResult<int> GetUserId([FromQuery] GetUserIdByNickAndPassword dto)
         {
             var result = _userService.GetUserIdByPasswordAndNickname(dto.nick, dto.password);
 
