@@ -112,7 +112,7 @@ namespace WebApplication2.Services.LeagueServices
 
         public int CreateLeague(CreateLeagueDto dto)
         {
-
+            dto.Creation_date = DateTime.UtcNow;
             var league = _mapper.Map<League>(dto);
 
             _dbContext.Leagues.Add(league);

@@ -39,7 +39,7 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet("gameweek")]
-        public ActionResult<IEnumerable<User>> GetMatchesByGameweek(int gameweek)
+        public ActionResult<IEnumerable<Match>> GetMatchesByGameweek(int gameweek)
         {
             var result = _matchService.GetMatchesByGameweek(gameweek);
 
